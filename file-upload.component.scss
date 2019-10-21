@@ -1,0 +1,26 @@
+.drop-box {
+    font-size: 22px;
+    background: #F8F8F8;
+    border: 2px dashed #DDD;
+    text-align: center;
+    padding: 50px 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: #868686;
+
+    &:hover {
+        cursor: copy;
+    }
+
+    &.drop-zone {
+        border: 2px dashed #999;
+    }
+}
+
+md-card {
+    margin: 15px;
+}
+
+.error-container {
+    word-wrap: break-word;
+}

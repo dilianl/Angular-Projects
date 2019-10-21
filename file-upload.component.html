@@ -1,0 +1,49 @@
+<nx1-side-panel-layout (close)="onClose()" [isFooterOpen]="fileUploadService.isValid">
+    <div header-area>
+        <h4>{{"str_Common_Upload_files" | translate}}</h4>
+    </div>
+    <div fixed-area class="padding--20 padding--top-10 padding--bottom-10">
+        <div *ngIf="(files$ | async)?.length <= 0" class="drop-box no-margin margin--top-10 margin--bottom-10" nx1FileDrop (fileDrop)="onFileSelect($event)" [multiple]="true" (click)="fileBrowse.click()">
+            {{ "str_FileUpload_Drop_file" | translate }}
+        </div>
+        <input [style.display]="'none'" type="file" #fileBrowse nx1FileSelect [accept]="fileUploadService.acceptedFiles" [multiple]="true"
+               (fileSelect)="onFileSelect($event)" />
+        <div class="overflow-hidden">
+            <button *ngIf="(files$ | async)?.length > 0" md-button
+                    (click)="fileBrowse.click()"
+                    (keyup.enter)="fileBrowse.click()"
+                    class="text--uppercase text--bold pull-right text-primary">
+                <i class="mdi mdi-plus"></i>
+                {{ "str_FileUpload_Add_more" | translate }}
+            </button>
+        </div>
+    </div>
+    <div scrollable-area>
+        <!-- error messages -->
+        <div *ngIf="fileUploadService?.errorMessage?.length>0" class="text-red error-container padding--top-20">{{fileUploadService.errorMessage}}</div>
+        <div *ngIf="fileUploadService?.notUploadedMessage?.length>0" class="text-red error-container padding--top-20">{{fileUploadService.notUploadedMessage}}</div>
+        <!-- repeater -->
+        <ul class="nxlist-group padding--top-20 padding--bottom-20">
+            <li class="nxlist-group__item bg-white z1 margin--bottom-5" *ngFor="let fileItem of (files$|async)">
+                <div class="nxlist-group__item-content">
+                    <div class="nxlist-group__item-content-row">
+                        <div class="nxlist-group__item-content-row--title">
+                            <span class="text-black-op-06" [attr.title]="fileItem.name">{{fileItem.name}}</span>
+                            <span class="text-black-op-06">{{fileItem.size | bytes}}</span>
+                        </div>
+                        <button md-icon-button (click)="fileItem.remove()">
+                            <i class="nxlist-group__item-content-row--icon mdi mdi-close"></i>
+                        </button>
+                    </div>
+                    <div class="nxlist-group__item-content-row" *ngIf="!fileItem.isUploaded">
+                        <md-progress-bar [mode]="fileItem.loadingMode" color="primary" [value]="fileItem.progress$|async"></md-progress-bar>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div footer-area>
+        <!-- save -->
+        <button *ngIf="fileUploadService.isValid" md-button (click)="onSave()" class="text--uppercase text--bold">{{ "str_FileUpload_Save" | translate }}</button>
+    </div>
+</nx1-side-panel-layout>
